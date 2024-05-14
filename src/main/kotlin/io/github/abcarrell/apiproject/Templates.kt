@@ -1,13 +1,25 @@
 package io.github.abcarrell.apiproject
 
-import com.android.tools.idea.wizard.template.*
+import com.android.tools.idea.wizard.template.Category
+import com.android.tools.idea.wizard.template.CheckBoxWidget
+import com.android.tools.idea.wizard.template.FormFactor
+import com.android.tools.idea.wizard.template.ModuleTemplateData
+import com.android.tools.idea.wizard.template.PackageNameWidget
+import com.android.tools.idea.wizard.template.TemplateConstraint
+import com.android.tools.idea.wizard.template.TemplateData
+import com.android.tools.idea.wizard.template.TextFieldWidget
+import com.android.tools.idea.wizard.template.WizardUiContext
+import com.android.tools.idea.wizard.template.booleanParameter
 import com.android.tools.idea.wizard.template.impl.defaultPackageNameParameter
+import com.android.tools.idea.wizard.template.stringParameter
+import com.android.tools.idea.wizard.template.template
 import java.io.File
 
 val projectTemplate
     get() = template {
         name = "Activity w/ MVI"
-        description = "Creates a simple application with MVI architecture and all necessary dependencies for calling an api."
+        description =
+            "Creates a simple application with MVI architecture and all necessary dependencies for calling an api."
         minApi = 24
         constraints = listOf(
             TemplateConstraint.AndroidX,
@@ -48,7 +60,7 @@ val projectTemplate
                 .resolve("template_blank_activity.png")
         }
 
-        recipe = {data: TemplateData ->
+        recipe = { data: TemplateData ->
             projectRecipe(
                 moduleData = data as ModuleTemplateData,
                 packageName = packageName.value,
@@ -83,6 +95,5 @@ val apiTemplate
             TextFieldWidget(baseUrl),
             PackageNameWidget(packageName)
         )
-
 
     }

@@ -2,7 +2,9 @@ package io.github.abcarrell.apiproject
 
 import com.android.tools.idea.npw.module.recipes.addTestDependencies
 import com.android.tools.idea.npw.module.recipes.generateManifest
-import com.android.tools.idea.wizard.template.*
+import com.android.tools.idea.wizard.template.ModuleTemplateData
+import com.android.tools.idea.wizard.template.PackageName
+import com.android.tools.idea.wizard.template.RecipeExecutor
 import com.android.tools.idea.wizard.template.impl.activities.common.addAllKotlinDependencies
 import io.github.abcarrell.apiproject.stubs.app.emptyApplication
 import io.github.abcarrell.apiproject.stubs.app.emptyManifestXml
