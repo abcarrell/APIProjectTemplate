@@ -7,11 +7,9 @@ import com.android.tools.idea.wizard.template.ModuleTemplateData
 import com.android.tools.idea.wizard.template.PackageNameWidget
 import com.android.tools.idea.wizard.template.TemplateConstraint
 import com.android.tools.idea.wizard.template.TemplateData
-import com.android.tools.idea.wizard.template.TextFieldWidget
 import com.android.tools.idea.wizard.template.WizardUiContext
 import com.android.tools.idea.wizard.template.booleanParameter
 import com.android.tools.idea.wizard.template.impl.defaultPackageNameParameter
-import com.android.tools.idea.wizard.template.stringParameter
 import com.android.tools.idea.wizard.template.template
 import java.io.File
 
@@ -71,29 +69,3 @@ val projectTemplate
         }
     }
 
-val apiTemplate
-    get() = template {
-        name = "API Service"
-        description = "Create a Retrofit-enabled API service."
-        constraints = listOf(
-            TemplateConstraint.AndroidX,
-            TemplateConstraint.Kotlin
-        )
-        category = Category.Other
-        screens = listOf(
-            WizardUiContext.NewProjectExtraDetail
-        )
-
-        val packageName = defaultPackageNameParameter
-
-        val baseUrl = stringParameter {
-            name = "Base Url for the API service"
-            default = "https://localhost/api/"
-        }
-
-        widgets(
-            TextFieldWidget(baseUrl),
-            PackageNameWidget(packageName)
-        )
-
-    }
