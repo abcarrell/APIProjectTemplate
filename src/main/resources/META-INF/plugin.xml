@@ -27,7 +27,7 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <postStartupActivity implementation="io.github.abcarrell.apiproject.AndroidProjectActivity"/>
+        <postStartupActivity implementation="io.github.abcarrell.apiproject.ApiProject$PostStartupActivity"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.android.tools.idea.wizard.template">
@@ -35,7 +35,7 @@
     </extensions>
 
     <applicationListeners>
-        <listener class="io.github.abcarrell.apiproject.AndroidProjectManagerListener"
+        <listener class="io.github.abcarrell.apiproject.ApiProject$ManagerListener"
                   topic="com.intellij.openapi.project.ProjectManagerListener"/>
     </applicationListeners>
 </idea-plugin>

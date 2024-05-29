@@ -5,7 +5,7 @@ fun emptyManifestXml(appName: String, styleName: String) = """
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:name=".${appName}Application"
+        android:name=".${appName}"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"

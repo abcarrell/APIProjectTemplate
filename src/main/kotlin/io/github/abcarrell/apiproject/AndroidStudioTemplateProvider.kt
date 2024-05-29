@@ -9,5 +9,3 @@ class AndroidStudioTemplateProvider : WizardTemplateProvider() {
         return listOf(projectTemplate)
     }
 }
-
-var projectInstance: Project? = null

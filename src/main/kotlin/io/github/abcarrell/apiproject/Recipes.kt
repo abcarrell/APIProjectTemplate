@@ -5,10 +5,12 @@ import com.android.tools.idea.npw.module.recipes.generateManifest
 import com.android.tools.idea.wizard.template.ModuleTemplateData
 import com.android.tools.idea.wizard.template.PackageName
 import com.android.tools.idea.wizard.template.RecipeExecutor
+import com.android.tools.idea.wizard.template.extractClassName
 import com.android.tools.idea.wizard.template.impl.activities.common.addAllKotlinDependencies
 import io.github.abcarrell.apiproject.stubs.app.emptyApplication
 import io.github.abcarrell.apiproject.stubs.app.emptyManifestXml
 import io.github.abcarrell.apiproject.stubs.baseDataMapper
+import io.github.abcarrell.apiproject.stubs.baseNavGraph
 import io.github.abcarrell.apiproject.stubs.baseUseCase
 import io.github.abcarrell.apiproject.stubs.baseViewHolder
 import io.github.abcarrell.apiproject.stubs.di.emptyAppModule
@@ -23,7 +25,7 @@ fun RecipeExecutor.projectRecipe(
     useHilt: Boolean,
     useNavigation: Boolean
 ) {
-    val appName = projectInstance?.name?.replace(Regex("[\\W_]"), "") ?: "Android"
+    val appName = extractClassName(ApiProject.projectInstance.name) ?: "Android"
     applyPlugin("com.google.devtools.ksp", "1.9.10-1.0.13")
     addAllKotlinDependencies(moduleData, revision = "1.9.10")
     addTestDependencies()
@@ -76,11 +78,18 @@ fun RecipeExecutor.projectRecipe(
     if (useHilt) {
         save(
             emptyApplication(packageName, appName),
-            moduleData.srcDir.resolve("${appName}Application.kt")
+            moduleData.srcDir.resolve("${appName}.kt")
         )
         save(
             emptyAppModule(packageName, appName),
             moduleData.srcDir.resolve("component/${appName}AppModule.kt")
+        )
+    }
+
+    if (useNavigation) {
+        save(
+            baseNavGraph(),
+            moduleData.resDir.resolve("navigation/nav_graph.xml")
         )
     }
 }
