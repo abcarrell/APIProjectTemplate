@@ -14,6 +14,7 @@ import io.github.abcarrell.apiproject.stubs.baseNavGraph
 import io.github.abcarrell.apiproject.stubs.baseUseCase
 import io.github.abcarrell.apiproject.stubs.baseViewHolder
 import io.github.abcarrell.apiproject.stubs.di.emptyAppModule
+import io.github.abcarrell.apiproject.stubs.emptyNavGraph
 import io.github.abcarrell.apiproject.stubs.mviStub
 import io.github.abcarrell.apiproject.stubs.ui.emptyViewsActivity
 import io.github.abcarrell.apiproject.stubs.ui.emptyViewsActivityLayout
@@ -88,8 +89,8 @@ fun RecipeExecutor.projectRecipe(
 
     if (useNavigation) {
         save(
-            baseNavGraph(),
-            moduleData.resDir.resolve("navigation/nav_graph.xml")
+            emptyNavGraph(),
+            moduleData.resDir.resolve("navigation.nav_graph.xml")
         )
     }
 }

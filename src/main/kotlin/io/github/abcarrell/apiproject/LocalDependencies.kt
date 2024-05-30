@@ -33,7 +33,7 @@ fun RecipeExecutor.addNavDependencies(navVersion: String = "2.7.5") {
     addDependency(mavenCoordinate = "androidx.navigation:navigation-fragment-ktx:$navVersion")
     addDependency(mavenCoordinate = "androidx.navigation:navigation-ui-ktx:$navVersion")
     addClasspathDependency(mavenCoordinate = "androidx.navigation:navigation-safe-args-gradle-plugin:$navVersion")
-    applyPlugin("androidx.navigation.safeargs.kotlin", navVersion)
+    applyPlugin(plugin = "androidx.navigation.safeargs.kotlin", navVersion)
 }
 
 fun RecipeExecutor.addViewsDependencies(
