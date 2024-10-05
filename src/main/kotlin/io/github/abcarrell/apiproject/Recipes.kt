@@ -10,9 +10,9 @@ import com.android.tools.idea.wizard.template.impl.activities.common.addAllKotli
 import io.github.abcarrell.apiproject.stubs.app.emptyApplication
 import io.github.abcarrell.apiproject.stubs.app.emptyManifestXml
 import io.github.abcarrell.apiproject.stubs.baseDataMapper
-import io.github.abcarrell.apiproject.stubs.baseNavGraph
 import io.github.abcarrell.apiproject.stubs.baseUseCase
 import io.github.abcarrell.apiproject.stubs.baseViewHolder
+import io.github.abcarrell.apiproject.stubs.data.emptyApiService
 import io.github.abcarrell.apiproject.stubs.di.emptyAppModule
 import io.github.abcarrell.apiproject.stubs.emptyNavGraph
 import io.github.abcarrell.apiproject.stubs.mviStub
@@ -34,7 +34,7 @@ fun RecipeExecutor.projectRecipe(
     generateManifest(hasApplicationBlock = true)
 
     addViewsDependencies()
-    addNetworkDependencies()
+    addNetworkDependencies(converter = RetrofitConverter.None)
     if (useRoom) addRoomDependencies()
     if (useHilt) addHiltDependencies()
     if (useNavigation) addNavDependencies()
@@ -93,4 +93,19 @@ fun RecipeExecutor.projectRecipe(
             moduleData.resDir.resolve("navigation.nav_graph.xml")
         )
     }
+}
+
+fun RecipeExecutor.retrofitRecipe(
+    moduleData: ModuleTemplateData,
+    className: String,
+    baseUrl: String,
+    converter: RetrofitConverter
+) {
+    val packageName = moduleData.packageName
+    addNetworkDependencies(converter = converter)
+
+    save(
+        emptyApiService(packageName, className, baseUrl, converter),
+        moduleData.srcDir.resolve("${className}.kt")
+    )
 }

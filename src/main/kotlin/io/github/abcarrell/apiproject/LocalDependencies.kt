@@ -2,17 +2,25 @@ package io.github.abcarrell.apiproject
 
 import com.android.tools.idea.wizard.template.RecipeExecutor
 
+enum class RetrofitConverter(val converterDependency: String = "", val dependency: String = "") {
+    Gson("converter-gson", "com.google.code.gson:gson:2.10.1"),
+    Moshi("converter-moshi", "com.squareup.moshi:moshi:1.15.1"),
+    None
+}
 fun RecipeExecutor.addNetworkDependencies(
-    retrofitVersion: String = "2.9.0",
+    retrofitVersion: String = "2.11.0",
     okHttpVersion: String = "4.12.0",
-    gsonVersion: String = "2.10.1"
+    converter: RetrofitConverter
 ) {
-    addDependency(mavenCoordinate = "com.squareup.retrofit2:retrofit:$retrofitVersion")
-    addDependency(mavenCoordinate = "com.squareup.retrofit2:converter-gson:$retrofitVersion")
+    addPlatformDependency("com.squareup.retrofit2:retrofit-bom:$retrofitVersion")
+    addDependency(mavenCoordinate = "com.squareup.retrofit2:retrofit")
     addPlatformDependency(mavenCoordinate = "com.squareup.okhttp3:okhttp-bom:$okHttpVersion")
     addDependency(mavenCoordinate = "com.squareup.okhttp3:okhttp")
     addDependency(mavenCoordinate = "com.squareup.okhttp3:logging-interceptor")
-    addDependency(mavenCoordinate = "com.google.code.gson:gson:$gsonVersion")
+    if (converter != RetrofitConverter.None) {
+        addDependency(mavenCoordinate = converter.dependency)
+        addDependency(mavenCoordinate = "com.squareup.retrofit2:${converter.converterDependency}")
+    }
     addDependency(mavenCoordinate = "com.squareup.okhttp3:mockwebserver", "testImplementation")
 }
 

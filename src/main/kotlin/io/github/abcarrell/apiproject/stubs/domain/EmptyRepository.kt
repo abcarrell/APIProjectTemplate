@@ -11,8 +11,8 @@ fun emptyRepository(
 ) = """
 package ${escapeKotlinIdentifier(packageName)}
 
-import ${escapeKotlinIdentifier(applicationPackage)}.data.ApiService
-import ${escapeKotlinIdentifier(applicationPackage)}.data.TestDataMapper
+import ${escapeKotlinIdentifier(applicationPackage)}.data.${dataSourceClassName}
+import ${escapeKotlinIdentifier(applicationPackage)}.data.${dataMapperClassName}
 
 interface $className {
     // TODO: create repository methods
@@ -21,7 +21,7 @@ interface $className {
 class ${className}Impl(
     service: $dataSourceClassName,
     mapper: $dataMapperClassName
-) {
+) : $className {
     // TODO: implement repository interface methods
 }
 

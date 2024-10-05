@@ -22,4 +22,5 @@ object ApiProject {
     }
 }
 
+@Suppress("UNUSED_PARAMETER")
 internal fun noOp(p0: Any? = null) = Unit

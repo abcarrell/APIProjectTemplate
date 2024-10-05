@@ -1,11 +1,12 @@
 package io.github.abcarrell.apiproject.stubs
 
 import com.android.tools.idea.wizard.template.escapeKotlinIdentifier
+import java.util.Base64
 
 fun baseDataMapper(packageName: String) = """
 package ${escapeKotlinIdentifier(packageName)}.data
 
-fun interface DataMapper<S, T> : (S) -> T
+fun interface DataMapper<in S, out T> : (S) -> T
 """
 
 fun baseUseCase(packageName: String) = """
