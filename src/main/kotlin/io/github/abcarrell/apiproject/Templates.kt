@@ -18,11 +18,11 @@ import com.android.tools.idea.wizard.template.stringParameter
 import com.android.tools.idea.wizard.template.template
 import java.io.File
 
-val projectTemplate
+val supportProjectTemplate
     get() = template {
-        name = "Activity w/ MVI"
+        name = "ABC Support Activity"
         description =
-            "Creates a simple application with MVI architecture and all necessary dependencies for calling an api."
+            "Creates a simple application with all necessary dependencies for calling an api."
         minApi = 24
         constraints = listOf(
             TemplateConstraint.AndroidX,
@@ -37,23 +37,36 @@ val projectTemplate
         val packageName = defaultPackageNameParameter
 
         val useRoom = booleanParameter {
-            name = "Add Room Persistence Support"
+            name = "Add Room Persistence support"
             default = true
         }
 
-        val useHilt = booleanParameter {
-            name = "Add Hilt support"
-            default = false
+        val dependencyInjection = enumParameter<DependencyInjection> {
+            name = "Add Dependency Injection Framework support"
+            default = DependencyInjection.None
+        }
+
+        val networkLibrary = enumParameter<NetworkLibrary> {
+            name = "Add Network Library support"
+            default = NetworkLibrary.None
+        }
+
+        val converter = enumParameter<RetrofitConverter> {
+            name = "Retrofit Converter Library"
+            default = RetrofitConverter.None
+            visible = { networkLibrary.value == NetworkLibrary.Retrofit }
         }
 
         val useNavigation = booleanParameter {
-            name = "Add Jetpack Navigation support"
+            name = "Add Jetpack Navigation Support"
             default = false
         }
 
         widgets(
             CheckBoxWidget(useRoom),
-            CheckBoxWidget(useHilt),
+            EnumWidget(networkLibrary),
+            EnumWidget(converter),
+            EnumWidget(dependencyInjection),
             CheckBoxWidget(useNavigation),
             PackageNameWidget(packageName)
         )
@@ -64,12 +77,14 @@ val projectTemplate
         }
 
         recipe = { data: TemplateData ->
-            projectRecipe(
+            supportProjectRecipe(
                 moduleData = data as ModuleTemplateData,
                 packageName = packageName.value,
                 useRoom = useRoom.value,
-                useHilt = useHilt.value,
-                useNavigation = useNavigation.value
+                networkLibrary = networkLibrary.value,
+                dependencyInjection = dependencyInjection.value,
+                useNavigation = useNavigation.value,
+                converter = if (networkLibrary.value == NetworkLibrary.Retrofit) converter.value else RetrofitConverter.None
             )
         }
     }

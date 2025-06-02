@@ -2,7 +2,7 @@ package io.github.abcarrell.apiproject.stubs.di
 
 import com.android.tools.idea.wizard.template.escapeKotlinIdentifier
 
-fun emptyAppModule(
+fun emptyHiltModule(
     packageName: String,
     appName: String
 ) = """

@@ -6,6 +6,6 @@ import com.intellij.openapi.project.Project
 
 class AndroidStudioTemplateProvider : WizardTemplateProvider() {
     override fun getTemplates(): List<Template> {
-        return listOf(projectTemplate, apiServiceTemplate)
+        return listOf(apiServiceTemplate, supportProjectTemplate)
     }
 }

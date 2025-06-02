@@ -1,23 +1,29 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.9.21"
-    id("org.jetbrains.intellij") version "1.16.1"
+    id("org.jetbrains.kotlin.jvm") version "2.0.21"
+    id("org.jetbrains.intellij.platform") version "2.6.0"
+    id("org.jetbrains.intellij.platform.migration") version "2.6.0"
 }
 
 group = "io.github.abcarrell"
-version = "0.0.2"
+version = "0.0.4"
 
 repositories {
     mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-    type.set("AI") // Target IDE Platform
-    version.set("2023.2.1.24")
-
-    plugins.set(listOf("org.jetbrains.android"))
+dependencies {
+    intellijPlatform {
+        androidStudio("2024.3.2.15")
+        plugin("org.jetbrains.android:243.24978.46")
+    }
 }
 
 tasks {
@@ -27,12 +33,12 @@ tasks {
         targetCompatibility = "17"
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
+        compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
     }
 
     patchPluginXml {
         sinceBuild.set("231")
-        untilBuild.set("241.*")
+        untilBuild.set("243.*")
     }
 
     signPlugin {
