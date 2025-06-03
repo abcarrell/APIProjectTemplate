@@ -10,6 +10,8 @@ build/
 .idea/compiler.xml
 .idea/libraries/
 .intellijPlatform
+.kotlin
+.kotlin/sessions/
 *.iws
 *.iml
 *.ipr

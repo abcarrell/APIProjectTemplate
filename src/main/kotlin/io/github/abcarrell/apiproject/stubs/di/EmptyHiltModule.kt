@@ -17,7 +17,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-object ${appName}AppModule {
+object ${appName}Module {
     @Provides
     fun provideApplicationContext(application: Application): Context {
         return application

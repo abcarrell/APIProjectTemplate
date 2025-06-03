@@ -10,6 +10,8 @@ fun emptyDataMapper(
 ) = """
 package ${escapeKotlinIdentifier(packageName)}
 
+import io.github.fctmisc.support.data.DataMapper
+
 fun interface $className : DataMapper<$receiverClass, $mappedClass>
 
 fun ${className.replaceFirstChar { it.lowercaseChar() }}() = $className { 

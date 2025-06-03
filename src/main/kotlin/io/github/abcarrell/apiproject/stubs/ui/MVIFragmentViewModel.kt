@@ -5,7 +5,6 @@ import com.android.tools.idea.wizard.template.impl.activities.common.layoutToVie
 import com.android.tools.idea.wizard.template.renderIf
 
 fun emptyMVIViewModel(
-    applicationPackage: String,
     packageName: String,
     className: String,
     includeFactory: Boolean,
@@ -16,10 +15,10 @@ package ${escapeKotlinIdentifier(packageName)}
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import ${escapeKotlinIdentifier(applicationPackage)}.mvi.MVI
-import ${escapeKotlinIdentifier(applicationPackage)}.mvi.MVIActor
-import ${escapeKotlinIdentifier(applicationPackage)}.mvi.mvi
 ${renderIf(includeHilt) { "import dagger.hilt.android.lifecycle.HiltViewModel" }}
+import io.github.fctmisc.support.mvi.MVI
+import io.github.fctmisc.support.mvi.MVIActor
+import io.github.fctmisc.support.mvi.mvi
 
 ${renderIf(includeHilt) { "@HiltViewModel" }}
 class $className ${renderIf(includeHilt) { "@Inject constructor " }}(

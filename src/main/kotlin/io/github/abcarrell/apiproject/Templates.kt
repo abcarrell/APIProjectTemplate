@@ -71,10 +71,7 @@ val supportProjectTemplate
             PackageNameWidget(packageName)
         )
 
-        thumb {
-            File("viewmodel-activity")
-                .resolve("template_blank_activity.png")
-        }
+        thumb { File("viewmodel-activity").resolve("template_blank_activity.png") }
 
         recipe = { data: TemplateData ->
             supportProjectRecipe(
@@ -89,7 +86,68 @@ val supportProjectTemplate
         }
     }
 
-val apiServiceTemplate
+val supportComposeProjectTemplate
+    get() = template {
+        name = "ABC Support Template (Compose)"
+        description =
+            "Creates a simple Compose application with all necessary dependencies for calling an api."
+        minApi = 24
+        constraints = listOf(
+            TemplateConstraint.AndroidX,
+            TemplateConstraint.Kotlin,
+            TemplateConstraint.Compose
+        )
+        category = Category.Application
+        formFactor = FormFactor.Mobile
+        screens = listOf(
+            WizardUiContext.NewProject,
+            WizardUiContext.NewProjectExtraDetail
+        )
+        val packageName = defaultPackageNameParameter
+
+        val useRoom = booleanParameter {
+            name = "Add Room Persistence support"
+            default = true
+        }
+
+        val dependencyInjection = enumParameter<DependencyInjection> {
+            name = "Add Dependency Injection Framework support"
+            default = DependencyInjection.None
+        }
+
+        val networkLibrary = enumParameter<NetworkLibrary> {
+            name = "Add Network Library support"
+            default = NetworkLibrary.None
+        }
+
+        val converter = enumParameter<RetrofitConverter> {
+            name = "Retrofit Converter Library"
+            default = RetrofitConverter.None
+            visible = { networkLibrary.value == NetworkLibrary.Retrofit }
+        }
+
+        widgets(
+            CheckBoxWidget(useRoom),
+            EnumWidget(networkLibrary),
+            EnumWidget(converter),
+            EnumWidget(dependencyInjection),
+            PackageNameWidget(packageName)
+        )
+
+        thumb { File("compose-activity-material3").resolve("template_compose_empty_activity_material3.png") }
+
+        recipe = { data: TemplateData ->
+            composeSupportProjectRecipe(
+                moduleData = data as ModuleTemplateData,
+                packageName = packageName.value,
+                useRoom = useRoom.value,
+                networkLibrary = networkLibrary.value,
+                dependencyInjection = dependencyInjection.value,
+                converter = if (networkLibrary.value == NetworkLibrary.Retrofit) converter.value else RetrofitConverter.None
+            )
+        }
+    }
+val retrofitServiceTemplate
     get() = template {
         name = "Retrofit API Service"
         description = ""

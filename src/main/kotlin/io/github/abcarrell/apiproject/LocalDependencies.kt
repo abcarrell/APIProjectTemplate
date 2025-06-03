@@ -6,7 +6,7 @@ import com.android.tools.idea.wizard.template.impl.activities.common.addMaterial
 import com.android.tools.idea.wizard.template.impl.activities.common.addMaterialDependency
 
 enum class RetrofitConverter(val converterDependency: String = "", val dependency: String = "") {
-    Gson("converter-gson", "com.google.code.gson:gson:2.10.1"),
+    Gson("converter-gson", "com.google.code.gson:gson:2.11.0"),
     Moshi("converter-moshi", "com.squareup.moshi:moshi:1.15.1"),
     None
 }
@@ -24,8 +24,8 @@ enum class DependencyInjection {
 }
 
 fun RecipeExecutor.addRetrofitDependencies(
-    retrofitVersion: String = "2.11.0",
-    okHttpVersion: String = "4.12.0",
+    retrofitVersion: String = LibraryVersions.RETROFIT_BOM,
+    okHttpVersion: String = LibraryVersions.OKHTTP_BOM,
     converter: RetrofitConverter
 ) {
     addPlatformDependency("com.squareup.retrofit2:retrofit-bom:$retrofitVersion")
@@ -42,7 +42,7 @@ fun RecipeExecutor.addRetrofitDependencies(
 
 fun RecipeExecutor.addKtorDependencies(
     data: ModuleTemplateData,
-    ktorVersion: String = "3.1.3"
+    ktorVersion: String = LibraryVersions.KOTLIN_KTOR
 ) {
     addDependency("io.ktor:ktor-client-core:$ktorVersion")
     addDependency("io.ktor:ktor-client-okhttp:$ktorVersion")
@@ -54,15 +54,15 @@ fun RecipeExecutor.addKtorDependencies(
     applyPlugin("org.jetbrains.kotlin.plugin.serialization", data.projectTemplateData.kotlinVersion)
 }
 
-fun RecipeExecutor.addRoomDependencies(roomVersion: String = "2.7.1") {
+fun RecipeExecutor.addRoomDependencies(roomVersion: String = LibraryVersions.ANDROIDX_ROOM) {
     addDependency(mavenCoordinate = "androidx.room:room-compiler:$roomVersion", configuration = "ksp")
     addDependency(mavenCoordinate = "androidx.room:room-runtime:$roomVersion")
     addDependency(mavenCoordinate = "androidx.room:room-ktx:$roomVersion")
     addDependency(mavenCoordinate = "androidx.room:room-paging:$roomVersion")
-    addDependency(mavenCoordinate = "androidx.room:room-compiler:$roomVersion", configuration = "annotationProcessor")
+    addDependency(mavenCoordinate = "androidx.room:room-testing:$roomVersion", configuration = "testImplementation")
 }
 
-fun RecipeExecutor.addHiltDependencies(hiltVersion: String = "2.49", withCompose: Boolean = false) {
+fun RecipeExecutor.addHiltDependencies(hiltVersion: String = LibraryVersions.ANDROID_HILT, withCompose: Boolean = false) {
     applyPlugin("com.google.dagger.hilt.android", hiltVersion)
     addDependency(mavenCoordinate = "com.google.dagger:hilt-compiler:$hiltVersion", configuration = "ksp")
     addDependency(mavenCoordinate = "com.google.dagger:hilt-android:$hiltVersion")
@@ -71,7 +71,7 @@ fun RecipeExecutor.addHiltDependencies(hiltVersion: String = "2.49", withCompose
     }
 }
 
-fun RecipeExecutor.addKoinDependencies(koinVersion: String = "4.0.4", withCompose: Boolean = false) {
+fun RecipeExecutor.addKoinDependencies(koinVersion: String = LibraryVersions.KOTLIN_KOIN, withCompose: Boolean = false) {
     addPlatformDependency("io.insert-koin:koin-bom:$koinVersion")
     addDependency("io.insert-koin:koin-core")
     addDependency("io.insert-koin:koin-android")
@@ -81,16 +81,21 @@ fun RecipeExecutor.addKoinDependencies(koinVersion: String = "4.0.4", withCompos
     }
 }
 
-fun RecipeExecutor.addNavDependencies(navVersion: String = "2.7.5") {
+fun RecipeExecutor.addNavDependencies(navVersion: String = LibraryVersions.ANDROIDX_NAVIGATION) {
     addDependency(mavenCoordinate = "androidx.navigation:navigation-fragment-ktx:$navVersion")
     addDependency(mavenCoordinate = "androidx.navigation:navigation-ui-ktx:$navVersion")
     addClasspathDependency(mavenCoordinate = "androidx.navigation:navigation-safe-args-gradle-plugin:$navVersion")
     applyPlugin(plugin = "androidx.navigation.safeargs.kotlin", navVersion)
 }
 
+fun RecipeExecutor.addTestSupportDependencies() {
+    addDependency("io.mockk:mockk:1.14.2", "testImplementation")
+    addDependency("org.robolectric:robolectric:4.14.1", "testImplementation")
+}
+
 fun RecipeExecutor.addViewsDependencies(
-    coreVersion: String = "1.16.0",
-    lifecycleVersion: String = "2.9.0",
+    coreVersion: String = LibraryVersions.ANDROID_CORE,
+    lifecycleVersion: String = LibraryVersions.ANDROIDX_LIFECYCLE,
     useMaterial3: Boolean = false
 ) {
     addDependency(mavenCoordinate = "androidx.core:core-ktx:$coreVersion")
@@ -108,9 +113,9 @@ fun RecipeExecutor.addViewsDependencies(
 }
 
 fun RecipeExecutor.addAdditionalComposeDependencies(
-    coreVersion: String = "1.16.0",
-    activityComposeVersion: String = "1.10.1",
-    lifecycleVersion: String = "2.9.0"
+    coreVersion: String = LibraryVersions.ANDROID_CORE,
+    activityComposeVersion: String = LibraryVersions.COMPOSE_ACTIVITY,
+    lifecycleVersion: String = LibraryVersions.ANDROIDX_LIFECYCLE
 ) {
     addDependency(mavenCoordinate = "androidx.core:core-ktx:$coreVersion")
     addDependency(mavenCoordinate = "androidx.compose.material3:material3")
@@ -119,4 +124,17 @@ fun RecipeExecutor.addAdditionalComposeDependencies(
     addDependency(mavenCoordinate = "androidx.activity:activity-compose:$activityComposeVersion")
     addDependency(mavenCoordinate = "androidx.navigation:navigation-compose:$lifecycleVersion")
     addDependency(mavenCoordinate = "io.github.fctmisc:support-compose:0.0.1-SNAPSHOT")
+}
+
+object LibraryVersions {
+    const val ANDROID_CORE = "1.16.0"
+    const val ANDROIDX_LIFECYCLE = "2.9.0"
+    const val ANDROIDX_ROOM = "2.7.1"
+    const val ANDROID_HILT = "2.50"
+    const val KOTLIN_KTOR = "3.1.3"
+    const val RETROFIT_BOM = "2.11.0"
+    const val OKHTTP_BOM = "4.12.0"
+    const val KOTLIN_KOIN = "4.0.4"
+    const val ANDROIDX_NAVIGATION = "2.9.0"
+    const val COMPOSE_ACTIVITY = "1.10.1"
 }

@@ -7,11 +7,26 @@ import io.github.abcarrell.apiproject.stubs.DOLLAR
 fun emptyViewsActivity(packageName: String, useHilt: Boolean) = """
 package ${escapeKotlinIdentifier(packageName)}
 
+import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 ${renderIf(useHilt, trim = false, skipLine = false) { "import dagger.hilt.android.AndroidEntryPoint" }}
 
 ${renderIf(useHilt, trim = false, skipLine = false) { "@AndroidEntryPoint" }}
-class MainActivity : AppCompatActivity(R.layout.activity_main)
+class MainActivity : AppCompatActivity(R.layout.activity_main) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_main)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+    }
+}
 
 """
 
@@ -20,6 +35,7 @@ fun emptyViewsActivityLayout() = """
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">

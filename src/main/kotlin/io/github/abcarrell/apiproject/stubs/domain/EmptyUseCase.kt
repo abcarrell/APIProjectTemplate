@@ -9,6 +9,8 @@ fun emptyUseCase(
 ) = """
 package ${escapeKotlinIdentifier(packageName)}
 
+import io.github.fctmisc.support.domain.UseCase
+
 fun interface $className : UseCase<$returnedClassName>
 
 fun ${className.replaceFirstChar { it.lowercaseChar() }}() = $className {
