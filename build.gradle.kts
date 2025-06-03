@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "io.github.abcarrell"
-version = "0.0.5"
+version = "0.0.8"
 
 repositories {
     mavenCentral()

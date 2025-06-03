@@ -88,7 +88,7 @@ val supportProjectTemplate
 
 val supportComposeProjectTemplate
     get() = template {
-        name = "ABC Support Template (Compose)"
+        name = "ABC Support Activity (Compose)"
         description =
             "Creates a simple Compose application with all necessary dependencies for calling an api."
         minApi = 24

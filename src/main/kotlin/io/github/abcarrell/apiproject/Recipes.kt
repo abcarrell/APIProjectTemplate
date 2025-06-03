@@ -7,7 +7,6 @@ import com.android.tools.idea.wizard.template.PackageName
 import com.android.tools.idea.wizard.template.RecipeExecutor
 import com.android.tools.idea.wizard.template.extractClassName
 import com.android.tools.idea.wizard.template.impl.activities.common.addAllKotlinDependencies
-import com.android.tools.idea.wizard.template.impl.activities.common.addComposeDependencies
 import com.android.tools.idea.wizard.template.impl.activities.common.generateManifest
 import io.github.abcarrell.apiproject.stubs.app.emptyApplication
 import io.github.abcarrell.apiproject.stubs.app.emptyHiltApplication
@@ -16,9 +15,12 @@ import io.github.abcarrell.apiproject.stubs.data.emptyApiService
 import io.github.abcarrell.apiproject.stubs.di.emptyHiltModule
 import io.github.abcarrell.apiproject.stubs.di.emptyKoinModule
 import io.github.abcarrell.apiproject.stubs.emptyNavGraph
+import io.github.abcarrell.apiproject.stubs.ui.colorKt
 import io.github.abcarrell.apiproject.stubs.ui.emptyComposeActivity
 import io.github.abcarrell.apiproject.stubs.ui.emptyViewsActivity
 import io.github.abcarrell.apiproject.stubs.ui.emptyViewsActivityLayout
+import io.github.abcarrell.apiproject.stubs.ui.themeKt
+import io.github.abcarrell.apiproject.stubs.ui.typeKt
 
 fun RecipeExecutor.supportProjectRecipe(
     moduleData: ModuleTemplateData,
@@ -67,10 +69,16 @@ fun RecipeExecutor.composeSupportProjectRecipe(
 
     setCommonLibraries(moduleData, packageName, appName, networkLibrary, dependencyInjection, converter, useRoom)
 
+    val themeName = "${moduleData.themesData.appName}Theme"
     save(
-        emptyComposeActivity(packageName, appName, dependencyInjection == DependencyInjection.Hilt),
+        emptyComposeActivity(packageName, appName, dependencyInjection == DependencyInjection.Hilt, themeName),
         moduleData.srcDir.resolve("MainActivity.kt")
     )
+    val uiThemeFolder = "ui/theme"
+    save(colorKt(packageName), moduleData.srcDir.resolve("$uiThemeFolder/Color.kt"))
+    save(themeKt(packageName, themeName), moduleData.srcDir.resolve("$uiThemeFolder/Theme.kt"))
+    save(typeKt(packageName), moduleData.srcDir.resolve("$uiThemeFolder/Type.kt"))
+    setBuildFeature("compose", true)
 }
 
 private fun RecipeExecutor.setCommonLibraries(
@@ -85,6 +93,7 @@ private fun RecipeExecutor.setCommonLibraries(
     val kspVersion = moduleData.projectTemplateData.kotlinVersion + "-1.0.28"
     applyPlugin("com.google.devtools.ksp", kspVersion)
     addAllKotlinDependencies(moduleData)
+    addDependency("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
     addTestDependencies()
     addTestSupportDependencies()
     when (networkLibrary) {
@@ -119,10 +128,12 @@ private fun RecipeExecutor.setCommonLibraries(
             addHiltDependencies()
             emptyHiltApplication(packageName, appName) to emptyHiltModule(packageName, appName)
         }
+
         DependencyInjection.Koin -> {
             addKoinDependencies()
             emptyKoinApplication(packageName, appName) to emptyKoinModule(packageName, appName)
         }
+
         DependencyInjection.None -> emptyApplication(packageName, appName) to null
     }
 

@@ -62,7 +62,10 @@ fun RecipeExecutor.addRoomDependencies(roomVersion: String = LibraryVersions.AND
     addDependency(mavenCoordinate = "androidx.room:room-testing:$roomVersion", configuration = "testImplementation")
 }
 
-fun RecipeExecutor.addHiltDependencies(hiltVersion: String = LibraryVersions.ANDROID_HILT, withCompose: Boolean = false) {
+fun RecipeExecutor.addHiltDependencies(
+    hiltVersion: String = LibraryVersions.ANDROID_HILT,
+    withCompose: Boolean = false
+) {
     applyPlugin("com.google.dagger.hilt.android", hiltVersion)
     addDependency(mavenCoordinate = "com.google.dagger:hilt-compiler:$hiltVersion", configuration = "ksp")
     addDependency(mavenCoordinate = "com.google.dagger:hilt-android:$hiltVersion")
@@ -71,7 +74,10 @@ fun RecipeExecutor.addHiltDependencies(hiltVersion: String = LibraryVersions.AND
     }
 }
 
-fun RecipeExecutor.addKoinDependencies(koinVersion: String = LibraryVersions.KOTLIN_KOIN, withCompose: Boolean = false) {
+fun RecipeExecutor.addKoinDependencies(
+    koinVersion: String = LibraryVersions.KOTLIN_KOIN,
+    withCompose: Boolean = false
+) {
     addPlatformDependency("io.insert-koin:koin-bom:$koinVersion")
     addDependency("io.insert-koin:koin-core")
     addDependency("io.insert-koin:koin-android")
@@ -112,6 +118,30 @@ fun RecipeExecutor.addViewsDependencies(
     addDependency("io.github.fctmisc:support:0.0.1-SNAPSHOT")
 }
 
+fun RecipeExecutor.addComposeDependencies(
+    data: ModuleTemplateData,
+    composeBomVersion: String = LibraryVersions.COMPOSE_BOM_VERSION,
+    composeUiVersion: String? = null
+) {
+    addPlugin(
+        "org.jetbrains.kotlin.plugin.compose",
+        "org.jetbrains.kotlin:compose-compiler-gradle-plugin"
+    )
+    applyPlugin("org.jetbrains.kotlin.plugin.compose", data.projectTemplateData.kotlinVersion)
+    addPlatformDependency(mavenCoordinate = "androidx.compose:compose-bom:$composeBomVersion")
+    addPlatformDependency(
+        mavenCoordinate = "androidx.compose:compose-bom:$composeBomVersion",
+        "androidTestImplementation"
+    )
+    val composeUiFormattedVersion = composeUiVersion?.let { ":$it" } ?: ""
+    addDependency(mavenCoordinate = "androidx.compose.ui:ui$composeUiFormattedVersion")
+    addDependency(mavenCoordinate = "androidx.compose.ui:ui-graphics")
+    addDependency(mavenCoordinate = "androidx.compose.ui:ui-tooling", configuration = "debugImplementation")
+    addDependency(mavenCoordinate = "androidx.compose.ui:ui-tooling-preview")
+    addDependency(mavenCoordinate = "androidx.compose.ui:ui-test-manifest", configuration = "debugImplementation")
+    addDependency(mavenCoordinate = "androidx.compose.ui:ui-test-junit4", configuration = "androidTestImplementation")
+}
+
 fun RecipeExecutor.addAdditionalComposeDependencies(
     coreVersion: String = LibraryVersions.ANDROID_CORE,
     activityComposeVersion: String = LibraryVersions.COMPOSE_ACTIVITY,
@@ -137,4 +167,5 @@ object LibraryVersions {
     const val KOTLIN_KOIN = "4.0.4"
     const val ANDROIDX_NAVIGATION = "2.9.0"
     const val COMPOSE_ACTIVITY = "1.10.1"
+    const val COMPOSE_BOM_VERSION = "2024.09.00"
 }
