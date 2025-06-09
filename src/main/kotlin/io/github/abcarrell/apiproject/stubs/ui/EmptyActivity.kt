@@ -2,6 +2,7 @@ package io.github.abcarrell.apiproject.stubs.ui
 
 import com.android.tools.idea.wizard.template.escapeKotlinIdentifier
 import com.android.tools.idea.wizard.template.renderIf
+import io.github.abcarrell.apiproject.DependencyInjection
 import io.github.abcarrell.apiproject.stubs.DOLLAR
 
 fun emptyViewsActivity(packageName: String, useHilt: Boolean) = """
@@ -44,7 +45,12 @@ fun emptyViewsActivityLayout() = """
 
 """
 
-fun emptyComposeActivity(packageName: String, appName: String, useHilt: Boolean, themeName: String) = """
+fun emptyComposeActivity(
+    packageName: String,
+    appName: String,
+    dependencyInjection: DependencyInjection,
+    themeName: String
+) = """
 package ${escapeKotlinIdentifier(packageName)}
 
 import android.os.Bundle
@@ -58,19 +64,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import ${escapeKotlinIdentifier(packageName)}.ui.theme.${themeName}
-${renderIf(useHilt, trim = false, skipLine = false) { "import dagger.hilt.android.AndroidEntryPoint" }}
+${
+    renderIf(
+        dependencyInjection == DependencyInjection.Hilt,
+        trim = false,
+        skipLine = false
+    ) { "import dagger.hilt.android.AndroidEntryPoint" }
+}
 
-${renderIf(useHilt, trim = false, skipLine = false) { "@AndroidEntryPoint" }}
+${renderIf(dependencyInjection == DependencyInjection.Hilt, trim = false, skipLine = false) { "@AndroidEntryPoint" }}
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            ${
+    renderIf(
+        dependencyInjection == DependencyInjection.Koin,
+        trim = false,
+        skipLine = false
+    ) { "$appName {" }
+} 
             $themeName {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     Greeting("Android")
                 }
             }
+            ${renderIf(dependencyInjection == DependencyInjection.Koin, trim = false, skipLine = false) { "}" }}
         }
     }
 }
@@ -90,4 +110,4 @@ fun GreetingPreview() {
         Greeting("Android")
     }
 }
-""".trimIndent()
+"""

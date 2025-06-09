@@ -11,6 +11,7 @@ import com.android.tools.idea.wizard.template.impl.activities.common.generateMan
 import io.github.abcarrell.apiproject.stubs.app.emptyApplication
 import io.github.abcarrell.apiproject.stubs.app.emptyHiltApplication
 import io.github.abcarrell.apiproject.stubs.app.emptyKoinApplication
+import io.github.abcarrell.apiproject.stubs.app.emptyKoinComposeAppFunction
 import io.github.abcarrell.apiproject.stubs.data.emptyApiService
 import io.github.abcarrell.apiproject.stubs.di.emptyHiltModule
 import io.github.abcarrell.apiproject.stubs.di.emptyKoinModule
@@ -29,12 +30,22 @@ fun RecipeExecutor.supportProjectRecipe(
     converter: RetrofitConverter = RetrofitConverter.None,
     dependencyInjection: DependencyInjection,
     useRoom: Boolean,
-    useNavigation: Boolean
+    useNavigation: Boolean,
+    useKotlinDateTime: Boolean = false
 ) {
     val appName = extractClassName(ApiProject.projectInstance.name) ?: "Android"
     addViewsDependencies()
     setViewBinding(true)
-    setCommonLibraries(moduleData, packageName, appName, networkLibrary, dependencyInjection, converter, useRoom)
+    setCommonLibraries(
+        moduleData,
+        packageName,
+        appName,
+        networkLibrary,
+        dependencyInjection,
+        converter,
+        useRoom,
+        useKotlinDateTime = useKotlinDateTime
+    )
 
     save(
         emptyViewsActivity(packageName, dependencyInjection == DependencyInjection.Hilt),
@@ -60,18 +71,29 @@ fun RecipeExecutor.composeSupportProjectRecipe(
     networkLibrary: NetworkLibrary,
     converter: RetrofitConverter = RetrofitConverter.None,
     dependencyInjection: DependencyInjection,
-    useRoom: Boolean
+    useRoom: Boolean,
+    useKotlinDateTime: Boolean = false
 ) {
     val appName = extractClassName(ApiProject.projectInstance.name) ?: "Android"
 
     addComposeDependencies(moduleData)
     addAdditionalComposeDependencies()
 
-    setCommonLibraries(moduleData, packageName, appName, networkLibrary, dependencyInjection, converter, useRoom)
+    setCommonLibraries(
+        moduleData,
+        packageName,
+        appName,
+        networkLibrary,
+        dependencyInjection,
+        converter,
+        useRoom,
+        useKotlinDateTime = useKotlinDateTime,
+        withCompose = true
+    )
 
     val themeName = "${moduleData.themesData.appName}Theme"
     save(
-        emptyComposeActivity(packageName, appName, dependencyInjection == DependencyInjection.Hilt, themeName),
+        emptyComposeActivity(packageName, appName, dependencyInjection, themeName),
         moduleData.srcDir.resolve("MainActivity.kt")
     )
     val uiThemeFolder = "ui/theme"
@@ -88,7 +110,9 @@ private fun RecipeExecutor.setCommonLibraries(
     networkLibrary: NetworkLibrary,
     dependencyInjection: DependencyInjection,
     converter: RetrofitConverter,
-    useRoom: Boolean
+    useRoom: Boolean,
+    withCompose: Boolean = false,
+    useKotlinDateTime: Boolean = false
 ) {
     val kspVersion = moduleData.projectTemplateData.kotlinVersion + "-1.0.28"
     applyPlugin("com.google.devtools.ksp", kspVersion)
@@ -102,6 +126,7 @@ private fun RecipeExecutor.setCommonLibraries(
         NetworkLibrary.None -> noOp()
     }
     if (useRoom) addRoomDependencies()
+    if (useKotlinDateTime) addKotlinDateTimeDependency()
     requireJavaVersion(BytecodeLevel.default.versionString, true)
 
     generateManifest(
@@ -125,13 +150,17 @@ private fun RecipeExecutor.setCommonLibraries(
 
     val (application, module) = when (dependencyInjection) {
         DependencyInjection.Hilt -> {
-            addHiltDependencies()
+            addHiltDependencies(withCompose = withCompose)
             emptyHiltApplication(packageName, appName) to emptyHiltModule(packageName, appName)
         }
 
         DependencyInjection.Koin -> {
-            addKoinDependencies()
-            emptyKoinApplication(packageName, appName) to emptyKoinModule(packageName, appName)
+            addKoinDependencies(withCompose = withCompose)
+            val app =
+                if (withCompose) emptyKoinComposeAppFunction(packageName, appName)
+                else emptyKoinApplication(packageName, appName)
+
+            app to emptyKoinModule(packageName, appName)
         }
 
         DependencyInjection.None -> emptyApplication(packageName, appName) to null

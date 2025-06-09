@@ -140,6 +140,7 @@ fun RecipeExecutor.addComposeDependencies(
     addDependency(mavenCoordinate = "androidx.compose.ui:ui-tooling-preview")
     addDependency(mavenCoordinate = "androidx.compose.ui:ui-test-manifest", configuration = "debugImplementation")
     addDependency(mavenCoordinate = "androidx.compose.ui:ui-test-junit4", configuration = "androidTestImplementation")
+    addDependency(mavenCoordinate = "androidx.constraintlayout:constraintlayout-compose:1.1.1")
 }
 
 fun RecipeExecutor.addAdditionalComposeDependencies(
@@ -153,7 +154,14 @@ fun RecipeExecutor.addAdditionalComposeDependencies(
     addDependency(mavenCoordinate = "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
     addDependency(mavenCoordinate = "androidx.activity:activity-compose:$activityComposeVersion")
     addDependency(mavenCoordinate = "androidx.navigation:navigation-compose:$lifecycleVersion")
+    addDependency(mavenCoordinate = "io.github.fctmisc:support:0.0.1-SNAPSHOT")
     addDependency(mavenCoordinate = "io.github.fctmisc:support-compose:0.0.1-SNAPSHOT")
+}
+
+fun RecipeExecutor.addKotlinDateTimeDependency(
+    version: String = LibraryVersions.KOTLIN_DATETIME
+) {
+    addDependency("org.jetbrains.kotlinx:kotlinx-datetime:$version")
 }
 
 object LibraryVersions {
@@ -162,6 +170,7 @@ object LibraryVersions {
     const val ANDROIDX_ROOM = "2.7.1"
     const val ANDROID_HILT = "2.50"
     const val KOTLIN_KTOR = "3.1.3"
+    const val KOTLIN_DATETIME = "0.6.2"
     const val RETROFIT_BOM = "2.11.0"
     const val OKHTTP_BOM = "4.12.0"
     const val KOTLIN_KOIN = "4.0.4"

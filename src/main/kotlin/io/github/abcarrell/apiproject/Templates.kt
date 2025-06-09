@@ -126,11 +126,17 @@ val supportComposeProjectTemplate
             visible = { networkLibrary.value == NetworkLibrary.Retrofit }
         }
 
+        val useKotlinDateTime = booleanParameter {
+            name = "Add support for kotlinx-datetime library"
+            default = false
+        }
+
         widgets(
             CheckBoxWidget(useRoom),
             EnumWidget(networkLibrary),
             EnumWidget(converter),
             EnumWidget(dependencyInjection),
+            CheckBoxWidget(useKotlinDateTime),
             PackageNameWidget(packageName)
         )
 
