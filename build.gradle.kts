@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "io.github.abcarrell"
-version = "0.1.0"
+version = "0.1.01"
 
 repositories {
     mavenCentral()
@@ -22,7 +22,7 @@ repositories {
 dependencies {
     intellijPlatform {
         androidStudio("2024.3.2.15")
-        plugin("org.jetbrains.android:243.24978.46")
+        plugin("org.jetbrains.android:243.26053.27")
     }
 }
 

@@ -152,9 +152,9 @@ fun RecipeExecutor.addAdditionalComposeDependencies(
     addDependency(mavenCoordinate = "androidx.compose.material3:material3")
     addDependency(mavenCoordinate = "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     addDependency(mavenCoordinate = "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
+    addDependency(mavenCoordinate = "androidx.lifecycle:lifecycle-process:$lifecycleVersion")
     addDependency(mavenCoordinate = "androidx.activity:activity-compose:$activityComposeVersion")
     addDependency(mavenCoordinate = "androidx.navigation:navigation-compose:$lifecycleVersion")
-    addDependency(mavenCoordinate = "io.github.fctmisc:support:0.0.1-SNAPSHOT")
     addDependency(mavenCoordinate = "io.github.fctmisc:support-compose:0.0.1-SNAPSHOT")
 }
 
